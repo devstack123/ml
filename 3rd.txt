@@ -1,0 +1,48 @@
+import numpy as np
+import matplotlib.pyplot as plt
+from sklearn.datasets import load_iris
+from sklearn.preprocessing import StandardScaler
+
+# Load Iris dataset
+iris = load_iris()
+X = iris.data
+y = iris.target
+
+print(X)
+print(y)
+
+# Standardize the features
+scaler = StandardScaler()
+X_scaled = scaler.fit_transform(X)
+print(X_scaled)
+
+# Covariance matrix
+cov_matrix = np.cov(X_scaled.T)
+print(cov_matrix)
+
+# Eigen decomposition
+eigenvalues, eigenvectors = np.linalg.eig(cov_matrix)
+print(eigenvalues)
+print(eigenvectors)
+
+# Sort eigenvectors by descending eigenvalues
+sorted_indices = np.argsort(eigenvalues)[::-1]
+eigenvectors_sorted = eigenvectors[:, sorted_indices]
+print(eigenvectors_sorted)
+
+# Select top 2 eigenvectors
+top_2_eigenvectors = eigenvectors_sorted[:, :2]
+print(top_2_eigenvectors)
+
+# Project data onto top 2 principal components
+X_pca = X_scaled.dot(top_2_eigenvectors)
+print(X_pca)
+
+# Plot PCA result
+plt.figure(figsize=(8, 6))
+plt.scatter(X_pca[:, 0], X_pca[:, 1], c=y, cmap='viridis', edgecolor='k', s=50)
+plt.title('PCA of Iris Dataset (Reduced to 2D)', fontsize=14)
+plt.xlabel('Principal Component 1')
+plt.ylabel('Principal Component 2')
+plt.colorbar(label='Species')
+plt.show()
