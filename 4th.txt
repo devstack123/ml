@@ -1,0 +1,21 @@
+import pandas as pd  
+
+data = pd.read_csv("train_data.csv")  
+
+positive_examples = data[data['class'] == 1]  
+print(positive_examples)  
+
+if positive_examples.empty:     
+    print("No positive examples found in the dataset.")  
+
+hypothesis = list(positive_examples.iloc[0, :-1])  
+print(hypothesis)  
+
+for _, example in positive_examples.iloc[1:].iterrows():      
+    print(f"Example: {example[:-1]}\n")      
+    for i in range(len(hypothesis)):          
+        if hypothesis[i] != example.iloc[i]:             
+            hypothesis[i] = '?'      
+    print(f"Hypothesis after example {example.name} : {hypothesis}\n")  
+
+print("Final Hypothesis: ", hypothesis)  
