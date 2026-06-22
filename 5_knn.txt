@@ -1,0 +1,44 @@
+import numpy as np
+from sklearn.neighbors import KNeighborsClassifier
+import matplotlib.pyplot as plt
+
+np.random.seed(0)
+x_values = np.random.rand(100) #0-1 range
+print(x_values)
+
+# Step 2: Label the first 50 points based on condition    np.where(condition, value_if_true, value_if_false)
+
+y_labels = np.where(x_values[:50] <= 0.5, 1, 2)  # Class 1 if x <= 0.5, else Class 2
+print(y_labels)
+
+# Step 3: Prepare training and test data
+x_train = x_values[:50].reshape(-1, 1)  # -1 numbers of rows  50 samples 1 column
+print(x_train)
+y_train = y_labels  # Labels for training
+print(y_train)
+
+x_test = x_values[50:].reshape(-1, 1)  # Next 50 points (to classify)
+y_actual = np.where(x_values[50:] <= 0.5, 1, 2)  # Actual labels for comparison
+
+# Step 4: Perform KNN classification for different values of k
+k_values = [1, 2, 3, 4, 5, 20, 30]
+accuracy = []  # Ensure this is an empty list
+for k in k_values:
+    model = KNeighborsClassifier(n_neighbors=k)
+    model.fit(x_train, y_train)  # Train model
+    y_pred = model.predict(x_test)  # Predict test set labels
+    acc = np.mean(y_pred == y_actual)  # Compute accuracy  Accuracy=Correct Predictions/Total Test Samples
+    accuracy.append(acc)  # Append a single value for each k
+    print("K: ", k, "Accuracy: ", acc)
+
+
+
+# Step 5: Plot accuracy vs k
+plt.plot(k_values, accuracy, marker='o', linestyle='-', color='b')  # Corrected here
+plt.title('KNN Classification Accuracy for Different k Values')
+plt.xlabel('k (Number of Neighbors)')
+plt.ylabel('Accuracy')
+plt.grid(True)
+plt.show()
+
+
